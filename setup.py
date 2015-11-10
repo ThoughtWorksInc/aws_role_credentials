@@ -7,6 +7,13 @@ try:
 except ImportError:
     from distutils.core import setup
 
+import os
+import imp
+
+CODE_DIRECTORY = 'aws_role_credentials'
+
+metadata = imp.load_source(
+    'metadata', os.path.join(CODE_DIRECTORY, 'metadata.py'))
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -23,13 +30,13 @@ test_requirements = [
 ]
 
 setup(
-    name='aws_role_credentials',
-    version='0.1.0',
-    description="Generates AWS credentials for roles using STS",
+    name=metadata.package,
+    version=metadata.version,
+    author=metadata.authors[0],
+    author_email=metadata.emails[0],
+    url=metadata.url,
+    description=metadata.description,
     long_description=readme + '\n\n' + history,
-    author="Peter Gillard-Moss",
-    author_email='pgillard@thoughtworks.com',
-    url='https://github.com/petergillardmoss/aws_role_credentials',
     packages=[
         'aws_role_credentials',
     ],
@@ -53,5 +60,10 @@ setup(
         'Programming Language :: Python :: 3.4',
     ],
     test_suite='tests',
-    tests_require=test_requirements
+    tests_require=test_requirements,
+    entry_points={
+        'console_scripts': [
+            'aws_role_credentials = aws_role_credentials.cli:entry_point'
+        ]
+    }
 )
