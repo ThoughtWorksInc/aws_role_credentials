@@ -42,6 +42,11 @@ def create_parser(prog, epilog):
         default='sts',
         help='Use a specific profile in your credential file.')
 
+    arg_parser.add_argument(
+        '--region', type=str,
+        default='us-east-1',
+        help='The region to use. Overrides config/env settings.')
+
     return arg_parser
 
 def main(argv):
@@ -81,7 +86,7 @@ URL: <{url}>
 
     generate_credentials(expanduser('~/.aws/credentials'),
                          config.profile,
-                         'us-east-1',
+                         config.region,
                          assertion)
 
     return 0
