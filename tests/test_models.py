@@ -71,6 +71,9 @@ class TestSamlAssertion(unittest.TestCase):
                                                     {'role': 'arn:aws:iam::2222:role/QARole',
                                                      'principle': 'arn:aws:iam::2222:saml-provider/IDP'}]
 
+    def test_assertion_is_encoded(self):
+        assert SamlAssertion("test encoding").encode() == 'dGVzdCBlbmNvZGluZw=='
+
 
 class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
     TEST_FILE="/test/file"

@@ -2,11 +2,12 @@
 
 import xml.etree.ElementTree as ET
 import ConfigParser
+import base64
 
 class SamlAssertion:
 
     def __init__(self, assertion):
-        self.assertion = ET.fromstring(assertion)
+        self.assertion = assertion
 
     @staticmethod
     def split_roles(roles):
@@ -21,7 +22,7 @@ class SamlAssertion:
 
 
     def roles(self):
-        attributes = self.assertion.getiterator('{urn:oasis:names:tc:SAML:2.0:assertion}Attribute')
+        attributes = ET.fromstring(self.assertion).getiterator('{urn:oasis:names:tc:SAML:2.0:assertion}Attribute')
 
         roles_attributes = [x for x
                             in attributes
@@ -35,6 +36,9 @@ class SamlAssertion:
                           self.sort_roles(self.split_roles(x)))))
                 for x
                 in roles_values[0]]
+
+    def encode(self):
+        return base64.b64encode(self.assertion)
 
 class AwsCredentialsFile:
     def __init__(self, filename):
