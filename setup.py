@@ -8,6 +8,7 @@ except ImportError:
     from distutils.core import setup
 
 import os
+import sys
 import imp
 
 CODE_DIRECTORY = 'aws_role_credentials'
@@ -22,8 +23,14 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read().replace('.. :changelog:', '')
 
 requirements = [
-    # TODO: put package requirements here
+    'boto'
 ]
+
+# as of Python >= 2.7 and >= 3.2, the argparse module is maintained within
+# the Python standard library, otherwise we install it as a separate package
+if sys.version_info < (2, 7) or (3, 0) <= sys.version_info < (3, 3):
+    requirements.append('argparse')
+
 
 test_requirements = [
     'unittest2'
