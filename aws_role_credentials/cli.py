@@ -25,6 +25,25 @@ def generate_credentials(credentials_filename,
 
     Actions(credentials_filename, profile, region).credentials_from_saml(assertion)
 
+def create_parser(prog, epilog):
+    arg_parser = argparse.ArgumentParser(
+        prog=prog,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=metadata.description,
+        epilog=epilog)
+
+    arg_parser.add_argument(
+        '-V', '--version',
+        action='version',
+        version='{0} {1}'.format(metadata.project, metadata.version))
+
+    arg_parser.add_argument(
+        '--profile', type=str,
+        default='sts',
+        help='Use a specific profile in your credential file.')
+
+    return arg_parser
+
 def main(argv):
     configurelogging()
 
@@ -48,17 +67,7 @@ URL: <{url}>
         authors='\n'.join(author_strings),
         url=metadata.url)
 
-    arg_parser = argparse.ArgumentParser(
-        prog=argv[0],
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=metadata.description,
-        epilog=epilog)
-
-    arg_parser.add_argument(
-        '-V', '--version',
-        action='version',
-        version='{0} {1}'.format(metadata.project, metadata.version))
-
+    arg_parser = create_parser(argv[0], epilog)
     config = arg_parser.parse_args(args=argv[1:])
 
     log.info(epilog)
@@ -71,7 +80,7 @@ URL: <{url}>
         pass
 
     generate_credentials(expanduser('~/.aws/credentials'),
-                         'saml',
+                         config.profile,
                          'us-east-1',
                          assertion)
 
