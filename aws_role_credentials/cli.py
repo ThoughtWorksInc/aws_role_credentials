@@ -7,7 +7,9 @@ import sys
 import argparse
 import logging
 
+from os.path import expanduser
 from aws_role_credentials import metadata
+from aws_role_credentials.actions import Actions
 
 log = logging.getLogger('aws_role_credentials')
 
@@ -16,6 +18,12 @@ def configurelogging():
     stderrlog = logging.StreamHandler()
     stderrlog.setFormatter(logging.Formatter("%(message)s"))
     log.addHandler(stderrlog)
+
+def generate_credentials(credentials_filename,
+                         profile,
+                         region, assertion):
+
+    Actions(credentials_filename, profile, region).credentials_from_saml(assertion)
 
 def main(argv):
     configurelogging()
@@ -54,6 +62,18 @@ URL: <{url}>
     config = arg_parser.parse_args(args=argv[1:])
 
     log.info(epilog)
+
+    assertion = ''
+    try:
+        assertion = ''.join([line for line in sys.stdin])
+    except KeyboardInterrupt:
+        sys.stdout.flush()
+        pass
+
+    generate_credentials(expanduser('~/.aws/credentials'),
+                         'saml',
+                         'us-east-1',
+                         assertion)
 
     return 0
 
