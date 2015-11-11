@@ -27,3 +27,7 @@ def write_config_file(filename, *lines):
     with open (filename, 'w') as testfile:
         for line in lines:
             testfile.write("%s\n" % line)
+
+class Struct:
+    def __init__(self, entries):
+        self.__dict__.update(**entries)

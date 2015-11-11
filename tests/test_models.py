@@ -15,15 +15,11 @@ else:
     import unittest
 
 import fake_filesystem_unittest
-from tests.helper import saml_assertion, write_config_file, read_config_file
+from tests.helper import saml_assertion, write_config_file, read_config_file, Struct
 from aws_role_credentials.models import SamlAssertion, AwsCredentialsFile
 
 def load_tests(loader, tests, ignore):
     return fake_filesystem_unittest.load_doctests(loader, tests, ignore, example)
-
-class Struct:
-    def __init__(self, **entries):
-        self.__dict__.update(entries)
 
 class TestSamlAssertion(unittest.TestCase):
     def test_roles_are_extracted(self):
@@ -69,9 +65,9 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
 
     def test_profile_is_added(self):
         AwsCredentialsFile(self.TEST_FILE).add_profile(
-            'dev', 'un-west-5', Struct(**{'access_key': 'ACCESS_KEY',
-                                          'secret_key': 'SECRET_KEY',
-                                          'session_token': 'SESSION_TOKEN'}))
+            'dev', 'un-west-5', Struct({'access_key': 'ACCESS_KEY',
+                                        'secret_key': 'SECRET_KEY',
+                                        'session_token': 'SESSION_TOKEN'}))
 
 
         assert read_config_file(self.TEST_FILE) == ['[dev]',
@@ -92,9 +88,9 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                           'aws_session_token = EXPIRED')
 
         AwsCredentialsFile(self.TEST_FILE).add_profile(
-            'dev', 'un-west-5', Struct(**{'access_key': 'ACCESS_KEY',
-                                          'secret_key': 'SECRET_KEY',
-                                          'session_token': 'SESSION_TOKEN'}))
+            'dev', 'un-west-5', Struct({'access_key': 'ACCESS_KEY',
+                                        'secret_key': 'SECRET_KEY',
+                                        'session_token': 'SESSION_TOKEN'}))
 
         assert read_config_file(self.TEST_FILE) == ['[dev]',
                                                     'region = un-west-5',
@@ -114,9 +110,9 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                           'aws_session_token = TEST_TOKEN')
 
         AwsCredentialsFile(self.TEST_FILE).add_profile(
-            'dev', 'un-west-5', Struct(**{'access_key': 'ACCESS_KEY',
-                                          'secret_key': 'SECRET_KEY',
-                                          'session_token': 'SESSION_TOKEN'}))
+            'dev', 'un-west-5', Struct({'access_key': 'ACCESS_KEY',
+                                        'secret_key': 'SECRET_KEY',
+                                        'session_token': 'SESSION_TOKEN'}))
 
         assert read_config_file(self.TEST_FILE) == ['[test]',
                                                     'region = us-west-2',
