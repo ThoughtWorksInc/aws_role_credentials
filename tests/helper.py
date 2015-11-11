@@ -15,3 +15,15 @@ def saml_assertion(roles):
       </saml2:AttributeStatement>
     </saml2:Assertion>
     </saml2p:Response>'''.format("".join(roles_values))
+
+def read_config_file(filename):
+    with open (filename, "r") as testfile:
+        config=[(l.replace('\n', ''))
+                for l in testfile.readlines()]
+
+    return config
+
+def write_config_file(filename, *lines):
+    with open (filename, 'w') as testfile:
+        for line in lines:
+            testfile.write("%s\n" % line)
