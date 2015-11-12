@@ -24,3 +24,11 @@ class Actions:
         self.credentials_file.add_profile(self.profile,
                                           self.region,
                                           token.credentials)
+
+    def credentials_from_user(self, arn, session_name):
+        conn = boto.sts.connect_to_region(self.region)
+        token = conn.assume_role(arn, session_name)
+
+        self.credentials_file.add_profile(self.profile,
+                                          self.region,
+                                          token.credentials)
