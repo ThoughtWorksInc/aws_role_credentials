@@ -19,9 +19,7 @@ def configurelogging():
     stderrlog.setFormatter(logging.Formatter("%(message)s"))
     log.addHandler(stderrlog)
 
-def generate_credentials(credentials_filename,
-                         profile,
-                         region):
+def generate_credentials(args):
 
     assertion = ''
     try:
@@ -30,7 +28,9 @@ def generate_credentials(credentials_filename,
         sys.stdout.flush()
         pass
 
-    Actions(credentials_filename, profile, region).credentials_from_saml(assertion)
+    Actions(args.credentials_filename,
+            args.profile,
+            args.region).credentials_from_saml(assertion)
 
 def create_parser(prog, epilog):
     arg_parser = argparse.ArgumentParser(
@@ -84,9 +84,9 @@ URL: <{url}>
 
     log.info(epilog)
 
-    generate_credentials(expanduser('~/.aws/credentials'),
-                         config.profile,
-                         config.region)
+    config.credentials_filename = expanduser('~/.aws/credentials')
+
+    generate_credentials(config)
 
     return 0
 
