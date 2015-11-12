@@ -21,7 +21,14 @@ def configurelogging():
 
 def generate_credentials(credentials_filename,
                          profile,
-                         region, assertion):
+                         region):
+
+    assertion = ''
+    try:
+        assertion = ''.join([line for line in sys.stdin])
+    except KeyboardInterrupt:
+        sys.stdout.flush()
+        pass
 
     Actions(credentials_filename, profile, region).credentials_from_saml(assertion)
 
@@ -77,17 +84,9 @@ URL: <{url}>
 
     log.info(epilog)
 
-    assertion = ''
-    try:
-        assertion = ''.join([line for line in sys.stdin])
-    except KeyboardInterrupt:
-        sys.stdout.flush()
-        pass
-
     generate_credentials(expanduser('~/.aws/credentials'),
                          config.profile,
-                         config.region,
-                         assertion)
+                         config.region)
 
     return 0
 
