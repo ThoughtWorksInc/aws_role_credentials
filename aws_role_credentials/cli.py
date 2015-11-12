@@ -19,8 +19,7 @@ def configurelogging():
     stderrlog.setFormatter(logging.Formatter("%(message)s"))
     log.addHandler(stderrlog)
 
-def generate_credentials(args):
-
+def saml_action(args):
     assertion = ''
     try:
         assertion = ''.join([line for line in sys.stdin])
@@ -32,27 +31,37 @@ def generate_credentials(args):
             args.profile,
             args.region).credentials_from_saml(assertion)
 
-def create_parser(prog, epilog):
+def create_parser(prog, epilog,
+                  actions):
     arg_parser = argparse.ArgumentParser(
         prog=prog,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=metadata.description,
         epilog=epilog)
+    subparsers = arg_parser.add_subparsers()
 
-    arg_parser.add_argument(
+    parent_parser = argparse.ArgumentParser(add_help=False)
+
+    parent_parser.add_argument(
         '-V', '--version',
         action='version',
         version='{0} {1}'.format(metadata.project, metadata.version))
 
-    arg_parser.add_argument(
+    parent_parser.add_argument(
         '--profile', type=str,
         default='sts',
         help='Use a specific profile in your credential file.')
 
-    arg_parser.add_argument(
+    parent_parser.add_argument(
         '--region', type=str,
         default='us-east-1',
         help='The region to use. Overrides config/env settings.')
+
+    saml_parser = subparsers.add_parser('saml',
+                                        description='Assume role using SAML assertion',
+                                        parents=[parent_parser])
+
+    saml_parser.set_defaults(func=actions['saml'])
 
     return arg_parser
 
@@ -79,14 +88,15 @@ URL: <{url}>
         authors='\n'.join(author_strings),
         url=metadata.url)
 
-    arg_parser = create_parser(argv[0], epilog)
+    arg_parser = create_parser(argv[0], epilog,
+                               {'saml': saml_action})
     config = arg_parser.parse_args(args=argv[1:])
 
     log.info(epilog)
 
     config.credentials_filename = expanduser('~/.aws/credentials')
 
-    generate_credentials(config)
+    config.func(config)
 
     return 0
 

@@ -15,7 +15,7 @@ Simple pipe a SAML assertion into awssaml
 
     # create credentials from saml assertion
 
-    $ oktaauth -u joebloggs | ./aws_role_credentials --profile dev
+    $ oktaauth -u joebloggs | ./aws_role_credentials saml --profile dev
 
 
 Options
