@@ -11,11 +11,18 @@ Generates AWS credentials for roles using STS and writes them to ```~/.aws/crede
 Usage
 =====
 
-Simple pipe a SAML assertion into awssaml
+Simply pipe a SAML assertion into awssaml
 
     # create credentials from saml assertion
 
-    $ oktaauth -u joebloggs | ./aws_role_credentials saml --profile dev
+    $ oktaauth -u joebloggs | aws_role_credentials saml --profile dev
+
+
+Or for assuming a role using an IAM user:
+
+    # create credentials from an iam user
+
+    $ aws_role_credentials user arn:aws:iam::111111:role/dev joebloggs-session --profile dev
 
 
 Options

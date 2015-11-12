@@ -31,6 +31,12 @@ def saml_action(args):
             args.profile,
             args.region).credentials_from_saml(assertion)
 
+def user_action(args):
+    Actions(args.credentials_filename,
+            args.profile,
+            args.region).credentials_from_user(args.role_arn,
+                                               args.session_name)
+
 def create_parser(prog, epilog,
                   actions):
     arg_parser = argparse.ArgumentParser(
@@ -63,6 +69,23 @@ def create_parser(prog, epilog,
 
     saml_parser.set_defaults(func=actions['saml'])
 
+    user_parser = subparsers.add_parser('user',
+                                        description='Assume role using IAM user',
+                                        parents=[parent_parser])
+
+    user_parser.add_argument(
+        'role_arn', type=str,
+        help='The arn of the role to assume',
+    )
+
+    user_parser.add_argument(
+        'session_name', type=str,
+        help='An identifier for the assumed role session.')
+
+
+    user_parser.set_defaults(func=actions['user'])
+
+
     return arg_parser
 
 def main(argv):
@@ -89,7 +112,8 @@ URL: <{url}>
         url=metadata.url)
 
     arg_parser = create_parser(argv[0], epilog,
-                               {'saml': saml_action})
+                               {'saml': saml_action,
+                                'user': user_action})
     config = arg_parser.parse_args(args=argv[1:])
 
     log.info(epilog)
