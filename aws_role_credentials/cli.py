@@ -35,7 +35,9 @@ def user_action(args):
     Actions(args.credentials_filename,
             args.profile,
             args.region).credentials_from_user(args.role_arn,
-                                               args.session_name)
+                                               args.session_name,
+                                               mfa_serial_number=args.mfa_serial_number,
+                                               mfa_token=args.mfa_token)
 
 def create_parser(prog, epilog,
                   actions):
@@ -81,6 +83,15 @@ def create_parser(prog, epilog,
     user_parser.add_argument(
         'session_name', type=str,
         help='An identifier for the assumed role session.')
+
+    user_parser.add_argument(
+        '--mfa-serial-number', type=str,
+        help='An identifier of the MFA device that is associated with the user.')
+
+
+    user_parser.add_argument(
+        '--mfa-token', type=str,
+        help='The value provided by the MFA device.')
 
 
     user_parser.set_defaults(func=actions['user'])

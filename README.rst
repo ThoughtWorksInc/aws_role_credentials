@@ -15,14 +15,20 @@ Simply pipe a SAML assertion into awssaml
 
     # create credentials from saml assertion
 
-    $ oktaauth -u joebloggs | aws_role_credentials saml --profile dev
+    $ oktaauth -u jobloggs | aws_role_credentials saml --profile dev
 
 
 Or for assuming a role using an IAM user:
 
     # create credentials from an iam user
 
-    $ aws_role_credentials user arn:aws:iam::111111:role/dev joebloggs-session --profile dev
+    $ aws_role_credentials user arn:aws:iam::111111:role/dev jobloggs-session --profile dev
+
+For roles that require MFA:
+
+    # create credentials from an iam user with mfa
+
+    $ aws_role_credentials user arn:aws:iam::111111:role/dev jobloggs-session --profile dev --mfa-serial-number arn:aws:iam::111111:mfa/Jo --mfa-token 102345
 
 
 Options

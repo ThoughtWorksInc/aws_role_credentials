@@ -53,3 +53,18 @@ class TestArgParsing(unittest.TestCase):
     def test_user_subcommand_requires_session_name(self):
         with self.assertRaises(SystemExit):
             self.parser.parse_args(['user', 'role-arn'])
+
+
+    def test_user_subcommand_with_mfa(self):
+        parsed = self.parser.parse_args(['user', 'test-arn', 'test-session',
+                                         '--mfa-serial-number', 'test-mfa-serial',
+                                         '--mfa-token', 'test-mfa-token'])
+
+        self.assertEqual(parsed.role_arn, 'test-arn')
+        self.assertEqual(parsed.session_name, 'test-session')
+        self.assertEqual(parsed.mfa_serial_number, 'test-mfa-serial')
+        self.assertEqual(parsed.mfa_token, 'test-mfa-token')
+
+        parsed.func()
+
+        self.mock_actions['user'].assert_called_with()
