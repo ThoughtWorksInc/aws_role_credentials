@@ -63,7 +63,10 @@ class TestActions(fake_filesystem_unittest.TestCase):
         Actions(self.TEST_FILE,
                 'test-profile', 'un-south-1').credentials_from_user(arn, session_name)
 
-        mock_conn.assume_role.assert_called_with(arn, session_name)
+        mock_conn.assume_role.assert_called_with(arn, session_name,
+                                                 mfa_serial_number=None,
+                                                 mfa_token=None)
+
 
         assert read_config_file(self.TEST_FILE) == ['[test-profile]',
                                                     'output = json',
@@ -72,3 +75,24 @@ class TestActions(fake_filesystem_unittest.TestCase):
                                                     'aws_secret_access_key = SAML_SECRET_KEY',
                                                     'aws_session_token = SAML_TOKEN',
                                                     '']
+
+    @mock.patch('aws_role_credentials.actions.boto.sts')
+    def test_mfa_is_passed_to_sts(self, mock_sts):
+        mock_conn = MagicMock()
+        mock_conn.assume_role.return_value = Struct({'credentials':
+                                                     Struct({'access_key': 'SAML_ACCESS_KEY',
+                                                             'secret_key': 'SAML_SECRET_KEY',
+                                                             'session_token': 'SAML_TOKEN'})})
+        mock_sts.connect_to_region.return_value = mock_conn
+
+        arn = 'arn:role/developer'
+        session_name = 'dev-session'
+
+        Actions(self.TEST_FILE,
+                'test-profile', 'un-south-1').credentials_from_user(arn, session_name,
+                                                                    mfa_serial_number='arn:11111',
+                                                                    mfa_token='123456')
+
+        mock_conn.assume_role.assert_called_with(arn, session_name,
+                                                 mfa_serial_number='arn:11111',
+                                                 mfa_token='123456')

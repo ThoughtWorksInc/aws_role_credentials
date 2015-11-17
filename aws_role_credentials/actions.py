@@ -25,9 +25,13 @@ class Actions:
                                           self.region,
                                           token.credentials)
 
-    def credentials_from_user(self, arn, session_name):
+    def credentials_from_user(self, arn, session_name,
+                              mfa_serial_number=None, mfa_token=None):
         conn = boto.sts.connect_to_region(self.region)
-        token = conn.assume_role(arn, session_name)
+
+        token = conn.assume_role(arn, session_name,
+                                 mfa_serial_number=mfa_serial_number,
+                                 mfa_token=mfa_token)
 
         self.credentials_file.add_profile(self.profile,
                                           self.region,
