@@ -70,13 +70,14 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                                         'session_token': 'SESSION_TOKEN'}))
 
 
-        assert read_config_file(self.TEST_FILE) == ['[dev]',
-                                                    'output = json',
-                                                    'region = un-west-5',
-                                                    'aws_access_key_id = ACCESS_KEY',
-                                                    'aws_secret_access_key = SECRET_KEY',
-                                                    'aws_session_token = SESSION_TOKEN',
-                                                    '']
+        self.assertItemsEqual(read_config_file(self.TEST_FILE),
+                              ['[dev]',
+                               'output = json',
+                               'region = un-west-5',
+                               'aws_access_key_id = ACCESS_KEY',
+                               'aws_secret_access_key = SECRET_KEY',
+                               'aws_session_token = SESSION_TOKEN',
+                               ''])
 
     def test_profile_is_updated(self):
         write_config_file(self.TEST_FILE,
@@ -92,13 +93,14 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                                         'secret_key': 'SECRET_KEY',
                                         'session_token': 'SESSION_TOKEN'}))
 
-        assert read_config_file(self.TEST_FILE) == ['[dev]',
-                                                    'region = un-west-5',
-                                                    'aws_access_key_id = ACCESS_KEY',
-                                                    'aws_secret_access_key = SECRET_KEY',
-                                                    'output = json',
-                                                    'aws_session_token = SESSION_TOKEN',
-                                                    '']
+        self.assertItemsEqual(read_config_file(self.TEST_FILE),
+                              ['[dev]',
+                               'region = un-west-5',
+                               'aws_access_key_id = ACCESS_KEY',
+                               'aws_secret_access_key = SECRET_KEY',
+                               'output = json',
+                               'aws_session_token = SESSION_TOKEN',
+                               ''])
 
     def test_existing_profiles_are_preserved(self):
         write_config_file(self.TEST_FILE,
@@ -114,20 +116,21 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                                         'secret_key': 'SECRET_KEY',
                                         'session_token': 'SESSION_TOKEN'}))
 
-        assert read_config_file(self.TEST_FILE) == ['[test]',
-                                                    'region = us-west-2',
-                                                    'aws_access_key_id = TEST_KEY',
-                                                    'aws_secret_access_key = TEST_ACCESS',
-                                                    'output = none',
-                                                    'aws_session_token = TEST_TOKEN',
-                                                    '',
-                                                    '[dev]',
-                                                    'output = json',
-                                                    'region = un-west-5',
-                                                    'aws_access_key_id = ACCESS_KEY',
-                                                    'aws_secret_access_key = SECRET_KEY',
-                                                    'aws_session_token = SESSION_TOKEN',
-                                                    '']
+        self.assertItemsEqual(read_config_file(self.TEST_FILE),
+                              ['[test]',
+                               'region = us-west-2',
+                               'aws_access_key_id = TEST_KEY',
+                               'aws_secret_access_key = TEST_ACCESS',
+                               'output = none',
+                               'aws_session_token = TEST_TOKEN',
+                               '',
+                               '[dev]',
+                               'output = json',
+                               'region = un-west-5',
+                               'aws_access_key_id = ACCESS_KEY',
+                               'aws_secret_access_key = SECRET_KEY',
+                               'aws_session_token = SESSION_TOKEN',
+                               ''])
 
 
 if __name__ == '__main__':
