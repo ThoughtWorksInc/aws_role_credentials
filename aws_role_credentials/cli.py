@@ -19,13 +19,15 @@ def configurelogging():
     stderrlog.setFormatter(logging.Formatter("%(message)s"))
     log.addHandler(stderrlog)
 
-def saml_action(args):
-    assertion = ''
+def read_stdin():
     try:
-        assertion = ''.join([line for line in sys.stdin])
+        return ''.join([line for line in sys.stdin])
     except KeyboardInterrupt:
         sys.stdout.flush()
         pass
+
+def saml_action(args):
+    assertion = read_stdin()
 
     Actions(args.credentials_filename,
             args.profile,
