@@ -9,9 +9,11 @@ from aws_role_credentials.cli import create_parser
 
 class TestArgParsing(unittest.TestCase):
     def setUp(self):
-        self.mock_actions = {'saml': Mock(),
-                             'user': Mock()}
-        self.parser = create_parser('test', None, self.mock_actions)
+        self.saml_action = Mock()
+        self.user_action = Mock()
+        self.parser = create_parser('test', None,
+                                    self.saml_action,
+                                    self.user_action)
 
     def test_profile_arg(self):
         parsed = self.parser.parse_args(['saml', '--profile', 'test'])
@@ -34,7 +36,7 @@ class TestArgParsing(unittest.TestCase):
 
         parsed.func()
 
-        self.mock_actions['saml'].assert_called_with()
+        self.saml_action.assert_called_with()
 
     def test_user_subcommand(self):
         parsed = self.parser.parse_args(['user', 'test-arn', 'test-session'])
@@ -44,7 +46,7 @@ class TestArgParsing(unittest.TestCase):
 
         parsed.func()
 
-        self.mock_actions['user'].assert_called_with()
+        self.user_action.assert_called_with()
 
     def test_user_subcommand_requires_positional_args(self):
         with self.assertRaises(SystemExit):
@@ -67,4 +69,4 @@ class TestArgParsing(unittest.TestCase):
 
         parsed.func()
 
-        self.mock_actions['user'].assert_called_with()
+        self.user_action.assert_called_with()

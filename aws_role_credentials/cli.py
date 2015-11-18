@@ -40,7 +40,8 @@ def user_action(args):
                                                mfa_token=args.mfa_token)
 
 def create_parser(prog, epilog,
-                  actions):
+                  saml_action=saml_action,
+                  user_action=user_action):
     arg_parser = argparse.ArgumentParser(
         prog=prog,
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -69,7 +70,7 @@ def create_parser(prog, epilog,
                                         description='Assume role using SAML assertion',
                                         parents=[parent_parser])
 
-    saml_parser.set_defaults(func=actions['saml'])
+    saml_parser.set_defaults(func=saml_action)
 
     user_parser = subparsers.add_parser('user',
                                         description='Assume role using IAM user',
@@ -94,7 +95,7 @@ def create_parser(prog, epilog,
         help='The value provided by the MFA device.')
 
 
-    user_parser.set_defaults(func=actions['user'])
+    user_parser.set_defaults(func=user_action)
 
 
     return arg_parser
@@ -122,9 +123,7 @@ URL: <{url}>
         authors='\n'.join(author_strings),
         url=metadata.url)
 
-    arg_parser = create_parser(argv[0], epilog,
-                               {'saml': saml_action,
-                                'user': user_action})
+    arg_parser = create_parser(argv[0], epilog)
     config = arg_parser.parse_args(args=argv[1:])
 
     log.info(epilog)
