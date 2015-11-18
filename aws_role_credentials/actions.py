@@ -13,26 +13,31 @@ class Actions:
                  self.profile = profile
                  self.region = region
 
-    def credentials_from_saml(self, assertion):
+    def persist_credentials(self, token):
+        self.credentials_file.add_profile(self.profile,
+                                          self.region,
+                                          token.credentials)
+
+    def saml_token(self, assertion):
         assertion = SamlAssertion(assertion)
         role = assertion.roles()[0]
 
         conn = boto.sts.connect_to_region(self.region, anon=True)
-        token = conn.assume_role_with_saml(role['role'], role['principle'],
-                                           assertion.encode())
+        return conn.assume_role_with_saml(role['role'], role['principle'],
+                                          assertion.encode())
 
-        self.credentials_file.add_profile(self.profile,
-                                          self.region,
-                                          token.credentials)
+    def user_token(self, arn, session_name,
+                   mfa_serial_number=None, mfa_token=None):
+        conn = boto.sts.connect_to_region(self.region)
+
+        return conn.assume_role(arn, session_name,
+                                mfa_serial_number=mfa_serial_number,
+                                mfa_token=mfa_token)
+
+    def credentials_from_saml(self, assertion):
+        self.persist_credentials(self.saml_token(assertion))
 
     def credentials_from_user(self, arn, session_name,
                               mfa_serial_number=None, mfa_token=None):
-        conn = boto.sts.connect_to_region(self.region)
-
-        token = conn.assume_role(arn, session_name,
-                                 mfa_serial_number=mfa_serial_number,
-                                 mfa_token=mfa_token)
-
-        self.credentials_file.add_profile(self.profile,
-                                          self.region,
-                                          token.credentials)
+        self.persist_credentials(self.user_token(arn, session_name,
+                                                 mfa_serial_number, mfa_token))
