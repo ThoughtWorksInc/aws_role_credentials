@@ -25,31 +25,34 @@ class Actions:
                                                     self.region,
                                                     token)
 
-    def saml_token(self, assertion):
+    @staticmethod
+    def saml_token(region, assertion):
         assertion = SamlAssertion(assertion)
         role = assertion.roles()[0]
 
-        conn = boto.sts.connect_to_region(self.region, anon=True)
+        conn = boto.sts.connect_to_region(region, anon=True)
         return conn.assume_role_with_saml(role['role'], role['principle'],
                                           assertion.encode())
 
-    def user_token(self, arn, session_name,
+    @staticmethod
+    def user_token(region, arn, session_name,
                    mfa_serial_number=None, mfa_token=None):
-        conn = boto.sts.connect_to_region(self.region)
+        conn = boto.sts.connect_to_region(region)
 
         return conn.assume_role(arn, session_name,
                                 mfa_serial_number=mfa_serial_number,
                                 mfa_token=mfa_token)
 
     def credentials_from_saml(self, assertion):
-        token = self.saml_token(assertion)
+        token = self.saml_token(self.region, assertion)
 
         self.credentials_handler()(token)
 
     def credentials_from_user(self, arn, session_name,
                               mfa_serial_number=None, mfa_token=None):
 
-        token = self.user_token(arn, session_name,
+        token = self.user_token(self.region,
+                                arn, session_name,
                                 mfa_serial_number, mfa_token)
 
         self.credentials_handler()(token)

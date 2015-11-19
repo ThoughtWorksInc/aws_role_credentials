@@ -27,8 +27,7 @@ class TestActions(unittest.TestCase):
 
         assertion = saml_assertion(['arn:aws:iam::1111:role/DevRole,arn:aws:iam::1111:saml-provider/IDP'])
 
-        token = Actions('test/file',
-                        'test-profile', 'un-south-1').saml_token(assertion)
+        token = Actions.saml_token('un-south-1', assertion)
 
         self.assertEqual(token, stub_token)
 
@@ -43,13 +42,12 @@ class TestActions(unittest.TestCase):
         arn = 'arn:role/developer'
         session_name = 'dev-session'
 
-        token = Actions('test/file',
-                'test-profile', 'un-south-1').user_token(arn, session_name)
+        token = Actions.user_token('un-south-1',
+                                   arn, session_name)
 
         mock_conn.assume_role.assert_called_with(arn, session_name,
                                                  mfa_serial_number=None,
                                                  mfa_token=None)
-
 
         self.assertEqual(token, stub_token)
 
@@ -64,10 +62,10 @@ class TestActions(unittest.TestCase):
         arn = 'arn:role/developer'
         session_name = 'dev-session'
 
-        Actions('/test/file',
-                'test-profile', 'un-south-1').user_token(arn, session_name,
-                                                         mfa_serial_number='arn:11111',
-                                                         mfa_token='123456')
+        Actions.user_token('un-south-1',
+                           arn, session_name,
+                           mfa_serial_number='arn:11111',
+                           mfa_token='123456')
 
         mock_conn.assume_role.assert_called_with(arn, session_name,
                                                  mfa_serial_number='arn:11111',
