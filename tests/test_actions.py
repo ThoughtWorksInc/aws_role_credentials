@@ -90,8 +90,9 @@ class TestConfigActions(fake_filesystem_unittest.TestCase):
                                 'secret_key': 'SAML_SECRET_KEY',
                                 'session_token': 'SAML_TOKEN'})})
 
-        Actions(self.TEST_FILE,
-                'test-profile', 'un-south-1').persist_credentials(token)
+        Actions.persist_credentials(self.TEST_FILE,
+                                    'test-profile',
+                                    'un-south-1', token)
 
         assert read_config_file(self.TEST_FILE) == ['[test-profile]',
                                                     'output = json',

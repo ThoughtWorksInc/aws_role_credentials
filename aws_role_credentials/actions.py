@@ -9,14 +9,21 @@ class Actions:
     def __init__(self, credentials_filename,
                  profile,
                  region):
-                 self.credentials_file = AwsCredentialsFile(credentials_filename)
+                 self.credentials_filename = credentials_filename
                  self.profile = profile
                  self.region = region
 
-    def persist_credentials(self, token):
-        self.credentials_file.add_profile(self.profile,
-                                          self.region,
-                                          token.credentials)
+    @staticmethod
+    def persist_credentials(credentials_filename,
+                            profile, region, token):
+        AwsCredentialsFile(credentials_filename).add_profile(profile,
+                                                             region,
+                                                             token.credentials)
+    def credentials_handler(self):
+        return lambda token: Actions.persist_credentials(self.credentials_filename,
+                                                    self.profile,
+                                                    self.region,
+                                                    token)
 
     def saml_token(self, assertion):
         assertion = SamlAssertion(assertion)
@@ -35,9 +42,14 @@ class Actions:
                                 mfa_token=mfa_token)
 
     def credentials_from_saml(self, assertion):
-        self.persist_credentials(self.saml_token(assertion))
+        token = self.saml_token(assertion)
+
+        self.credentials_handler()(token)
 
     def credentials_from_user(self, arn, session_name,
                               mfa_serial_number=None, mfa_token=None):
-        self.persist_credentials(self.user_token(arn, session_name,
-                                                 mfa_serial_number, mfa_token))
+
+        token = self.user_token(arn, session_name,
+                                mfa_serial_number, mfa_token)
+
+        self.credentials_handler()(token)
