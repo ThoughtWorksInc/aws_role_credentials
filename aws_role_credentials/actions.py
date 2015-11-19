@@ -22,10 +22,11 @@ class Actions:
         AwsCredentialsFile(credentials_filename).add_profile(profile,
                                                              region,
                                                              token.credentials)
-    def credentials_handler(self):
-        return lambda token: Actions.persist_credentials(self.credentials_filename,
-                                                    self.profile,
-                                                    self.region,
+    @staticmethod
+    def credentials_handler(credentials_filename, profile, region):
+        return lambda token: Actions.persist_credentials(credentials_filename,
+                                                    profile,
+                                                    region,
                                                     token)
 
     @staticmethod
@@ -47,15 +48,19 @@ class Actions:
                                 mfa_token=mfa_token)
 
     def credentials_from_saml(self, assertion):
-        token = self.saml_token(self.region, assertion)
+        token = Actions.saml_token(self.region, assertion)
 
-        self.credentials_handler()(token)
+        Actions.credentials_handler(self.credentials_filename,
+                                 self.profile,
+                                 self.region)(token)
 
     def credentials_from_user(self, arn, session_name,
                               mfa_serial_number=None, mfa_token=None):
 
-        token = self.user_token(self.region,
-                                arn, session_name,
-                                mfa_serial_number, mfa_token)
+        token = Actions.user_token(self.region,
+                                   arn, session_name,
+                                   mfa_serial_number, mfa_token)
 
-        self.credentials_handler()(token)
+        Actions.credentials_handler(self.credentials_filename,
+                                    self.profile,
+                                    self.region)(token)
