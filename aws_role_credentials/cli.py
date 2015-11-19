@@ -27,16 +27,14 @@ def read_stdin():
         pass
 
 def saml_action(args):
-    assertion = read_stdin()
+    args['assertion'] = read_stdin()
 
-    Actions(**vars(args)).credentials_from_saml(assertion)
+    Actions.credentials_handler(
+        **args)(Actions.saml_token(**args))
 
 def user_action(args):
-    Actions(
-        **vars(args)).credentials_from_user(args.role_arn,
-                                            args.session_name,
-                                            mfa_serial_number=args.mfa_serial_number,
-                                            mfa_token=args.mfa_token)
+    Actions.credentials_handler(
+        **args)(Actions.user_token(**args))
 
 def create_parser(prog, epilog,
                   saml_action=saml_action,
@@ -129,7 +127,7 @@ URL: <{url}>
 
     config.credentials_filename = expanduser('~/.aws/credentials')
 
-    config.func(config)
+    config.func(vars(config))
 
     return 0
 

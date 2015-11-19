@@ -23,14 +23,16 @@ class Actions:
                                                              region,
                                                              token.credentials)
     @staticmethod
-    def credentials_handler(credentials_filename, profile, region):
+    def credentials_handler(credentials_filename,
+                            profile,
+                            region, **kwargs):
         return lambda token: Actions.persist_credentials(credentials_filename,
                                                     profile,
                                                     region,
                                                     token)
 
     @staticmethod
-    def saml_token(region, assertion):
+    def saml_token(region, assertion, **kwargs):
         assertion = SamlAssertion(assertion)
         role = assertion.roles()[0]
 
@@ -39,28 +41,11 @@ class Actions:
                                           assertion.encode())
 
     @staticmethod
-    def user_token(region, arn, session_name,
-                   mfa_serial_number=None, mfa_token=None):
+    def user_token(region, role_arn, session_name,
+                   mfa_serial_number=None, mfa_token=None,
+                   **kwargs):
         conn = boto.sts.connect_to_region(region)
 
-        return conn.assume_role(arn, session_name,
+        return conn.assume_role(role_arn, session_name,
                                 mfa_serial_number=mfa_serial_number,
                                 mfa_token=mfa_token)
-
-    def credentials_from_saml(self, assertion):
-        token = Actions.saml_token(self.region, assertion)
-
-        Actions.credentials_handler(self.credentials_filename,
-                                 self.profile,
-                                 self.region)(token)
-
-    def credentials_from_user(self, arn, session_name,
-                              mfa_serial_number=None, mfa_token=None):
-
-        token = Actions.user_token(self.region,
-                                   arn, session_name,
-                                   mfa_serial_number, mfa_token)
-
-        Actions.credentials_handler(self.credentials_filename,
-                                    self.profile,
-                                    self.region)(token)
