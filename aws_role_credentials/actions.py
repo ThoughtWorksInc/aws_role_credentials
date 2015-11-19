@@ -6,12 +6,15 @@ from aws_role_credentials.models import SamlAssertion, AwsCredentialsFile
 
 class Actions:
 
-    def __init__(self, credentials_filename,
+    def __init__(self,
+                 credentials_filename,
                  profile,
-                 region):
-                 self.credentials_filename = credentials_filename
-                 self.profile = profile
-                 self.region = region
+                 region,
+                 **kwargs):
+
+        self.credentials_filename = credentials_filename
+        self.profile = profile
+        self.region = region
 
     @staticmethod
     def persist_credentials(credentials_filename,

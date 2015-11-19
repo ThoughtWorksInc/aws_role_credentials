@@ -29,17 +29,14 @@ def read_stdin():
 def saml_action(args):
     assertion = read_stdin()
 
-    Actions(args.credentials_filename,
-            args.profile,
-            args.region).credentials_from_saml(assertion)
+    Actions(**vars(args)).credentials_from_saml(assertion)
 
 def user_action(args):
-    Actions(args.credentials_filename,
-            args.profile,
-            args.region).credentials_from_user(args.role_arn,
-                                               args.session_name,
-                                               mfa_serial_number=args.mfa_serial_number,
-                                               mfa_token=args.mfa_token)
+    Actions(
+        **vars(args)).credentials_from_user(args.role_arn,
+                                            args.session_name,
+                                            mfa_serial_number=args.mfa_serial_number,
+                                            mfa_token=args.mfa_token)
 
 def create_parser(prog, epilog,
                   saml_action=saml_action,
