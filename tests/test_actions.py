@@ -72,6 +72,29 @@ class TestActions(unittest.TestCase):
                                                  mfa_token='123456')
 
 
+    @mock.patch('aws_role_credentials.actions.Popen')
+    def test_exec_setups_environment_variables(self, mock_popen):
+        token = Struct({'credentials':
+                        Struct({'access_key': 'TEST_ACCESS_KEY',
+                                'secret_key': 'TEST_SECRET_KEY',
+                                'session_token': 'TEST_TOKEN'})})
+
+        with mock.patch('os.environ') as mock_env:
+            mock_env.copy.return_value = {}
+
+            Actions.exec_with_credentials('un-south-1',
+                                          'echo hello', token)
+
+            mock_popen.assert_called_with(['echo', 'hello'],
+                                          env={'AWS_ACCESS_KEY_ID':'TEST_ACCESS_KEY',
+                                               'AWS_DEFAULT_REGION': 'un-south-1',
+                                               'AWS_SECRET_ACCESS_KEY': 'TEST_SECRET_KEY',
+                                               'AWS_SESSION_TOKEN': 'TEST_TOKEN'},
+                                          shell=False)
+
+
+
+
 class TestConfigActions(fake_filesystem_unittest.TestCase):
     TEST_FILE="/test/file"
 

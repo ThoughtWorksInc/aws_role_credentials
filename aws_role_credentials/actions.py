@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import os
 import boto.sts
+import shlex
+from subprocess import Popen
 
 from aws_role_credentials.models import SamlAssertion, AwsCredentialsFile
 
@@ -30,6 +33,23 @@ class Actions:
                                                     profile,
                                                     region,
                                                     token)
+
+    @staticmethod
+    def exec_with_credentials(region, command, token):
+        env = os.environ.copy()
+
+        env["AWS_ACCESS_KEY_ID"] = token.credentials.access_key
+        env["AWS_SECRET_ACCESS_KEY"] = token.credentials.secret_key
+        env["AWS_SESSION_TOKEN"] = token.credentials.session_token
+        env["AWS_DEFAULT_REGION"] = region
+
+        Popen(shlex.split(command),
+              env=env,
+              shell=False).wait()
+
+    @staticmethod
+    def exec_handler(region, command):
+        return lambda token: Actions.exec_with_credentials(region, command, token)
 
     @staticmethod
     def saml_token(region, assertion, **kwargs):
