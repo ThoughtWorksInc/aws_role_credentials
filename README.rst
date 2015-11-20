@@ -13,22 +13,31 @@ Usage
 
 Simply pipe a SAML assertion into awssaml
 
-    # create credentials from saml assertion
+.. code-block:: shell
 
+    # create credentials from saml assertion
     $ oktaauth -u jobloggs | aws_role_credentials saml --profile dev
 
 
 Or for assuming a role using an IAM user:
 
-    # create credentials from an iam user
+.. code-block:: shell
 
-    $ aws_role_credentials user arn:aws:iam::111111:role/dev jobloggs-session --profile dev
+    # create credentials from an iam user
+    $ aws_role_credentials user \
+      arn:aws:iam::111111:role/dev jobloggs-session \
+      --profile dev
 
 For roles that require MFA:
 
-    # create credentials from an iam user with mfa
+.. code-block:: shell
 
-    $ aws_role_credentials user arn:aws:iam::111111:role/dev jobloggs-session --profile dev --mfa-serial-number arn:aws:iam::111111:mfa/Jo --mfa-token 102345
+    # create credentials from an iam user with mfa
+    $ aws_role_credentials user \
+      arn:aws:iam::111111:role/dev jobloggs-session \
+      --profile dev \
+      --mfa-serial-number arn:aws:iam::111111:mfa/Jo \
+      --mfa-token 102345
 
 Transient mode
 --------------
@@ -40,9 +49,12 @@ the process.  This adds an extra layer of safety and convinience.
 To use transient mode simply pass a command to the ```--exec``` option
 like so:
 
-    # run 'aws s3 ls' with the generated role credentials from an iam user
+.. code-block:: shell
 
-    $ aws_role_credentials user arn:aws:iam::111111:role/dev jobloggs-session --exec 'aws s3 ls'
+    # run 'aws s3 ls' with the generated role credentials from an iam user
+    $ aws_role_credentials user \
+      arn:aws:iam::111111:role/dev jobloggs-session \
+      --exec 'aws s3 ls'
 
 
 Options
