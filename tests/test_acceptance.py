@@ -19,16 +19,16 @@ def load_tests(loader, tests, ignore):
     return fake_filesystem_unittest.load_doctests(loader, tests, ignore, example)
 
 class TestAcceptance(fake_filesystem_unittest.TestCase):
-    AWS_HOME = expanduser('~/.aws')
-    TEST_FILE=expanduser('~/.aws/credentials')
+    HOME = expanduser('~/')
+    TEST_FILE=os.path.join(HOME, '.aws/credentials')
 
     def setUp(self):
         self.patcher = mock.patch('aws_role_credentials.cli.configurelogging')
         self.patcher.start()
 
         self.setUpPyfakefs()
-        if not os.path.exists(self.AWS_HOME):
-            os.makedirs(self.AWS_HOME)
+        if not os.path.exists(self.HOME):
+            os.makedirs(self.HOME)
 
     def tearDown(self):
         self.patcher.stop()

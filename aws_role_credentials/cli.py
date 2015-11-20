@@ -6,6 +6,7 @@ from __future__ import print_function
 import sys
 import argparse
 import logging
+import os
 
 from os.path import expanduser
 from aws_role_credentials import metadata
@@ -132,7 +133,12 @@ URL: <{url}>
 
     log.info(epilog)
 
-    config.credentials_filename = expanduser('~/.aws/credentials')
+    credentials_dir = expanduser('~/.aws')
+
+    if not os.path.exists(credentials_dir):
+        os.makedirs(credentials_dir)
+
+    config.credentials_filename = os.path.join(credentials_dir, 'credentials')
 
     config.func(vars(config))
 
