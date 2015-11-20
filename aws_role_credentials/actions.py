@@ -48,8 +48,8 @@ class Actions:
               shell=False).wait()
 
     @staticmethod
-    def exec_handler(region, command):
-        return lambda token: Actions.exec_with_credentials(region, command, token)
+    def exec_handler(region, exec_command, **kwargs):
+        return lambda token: Actions.exec_with_credentials(region, exec_command, token)
 
     @staticmethod
     def saml_token(region, assertion, **kwargs):

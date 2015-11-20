@@ -81,3 +81,20 @@ class TestAcceptance(fake_filesystem_unittest.TestCase):
                           'aws_secret_access_key = SAML_SECRET_KEY',
                           'aws_session_token = SAML_TOKEN',
                           ''])
+
+    @mock.patch('aws_role_credentials.actions.Popen')
+    @mock.patch('aws_role_credentials.actions.boto.sts')
+    def test_credentials_exec_command(self, mock_sts, mock_popen):
+        mock_conn = MagicMock()
+        mock_conn.assume_role.return_value = Struct({'credentials':
+                                                     Struct({'access_key': 'SAML_ACCESS_KEY',
+                                                             'secret_key': 'SAML_SECRET_KEY',
+                                                             'session_token': 'SAML_TOKEN'})})
+
+        cli.main(['test.py', 'user', 'arn:role/developer',
+                  'dev-session',
+                  '--exec', 'echo hello'])
+
+        args, kwargs = mock_popen.call_args
+
+        self.assertTrue(['echo', 'hello'] in args)

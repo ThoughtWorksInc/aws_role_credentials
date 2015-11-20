@@ -30,13 +30,27 @@ For roles that require MFA:
 
     $ aws_role_credentials user arn:aws:iam::111111:role/dev jobloggs-session --profile dev --mfa-serial-number arn:aws:iam::111111:mfa/Jo --mfa-token 102345
 
+Transient mode
+--------------
+
+```aws_role_credentials``` also supports 'transient' mode where the
+credentials are passed to a command as environment variables within
+the process.  This adds an extra layer of safety and convinience.
+
+To use transient mode simply pass a command to the ```--exec``` option
+like so:
+
+    # run 'aws s3 ls' with the generated role credentials from an iam user
+
+    $ aws_role_credentials user arn:aws:iam::111111:role/dev jobloggs-session --exec 'aws s3 ls'
+
 
 Options
 =======
 
     --profile          Use a specific profile in your credential file (e.g. Development).  Defaults to sts.
     --region           The region to use. Overrides config/env settings.  Defaults to us-east-1.
-
+    --exec             The command to execute with the AWS credentials
 
 Thanks
 ======

@@ -26,15 +26,18 @@ def read_stdin():
         sys.stdout.flush()
         pass
 
+def token_action(args):
+    if args['exec_command']:
+        return Actions.exec_handler(**args)
+    return Actions.credentials_handler(**args)
+
 def saml_action(args):
     args['assertion'] = read_stdin()
 
-    Actions.credentials_handler(
-        **args)(Actions.saml_token(**args))
+    token_action(args)(Actions.saml_token(**args))
 
 def user_action(args):
-    Actions.credentials_handler(
-        **args)(Actions.user_token(**args))
+    token_action(args)(Actions.user_token(**args))
 
 def create_parser(prog, epilog,
                   saml_action=saml_action,
