@@ -31,6 +31,10 @@ class TestArgParsing(unittest.TestCase):
         parsed = self.parser.parse_args(['saml'])
         self.assertEqual(parsed.region, 'us-east-1')
 
+    def test_exec_arg(self):
+        parsed = self.parser.parse_args(['saml', '--exec', 'echo this'])
+        self.assertEquals(parsed.exec_command, 'echo this')
+
     def test_saml_subcommand(self):
         parsed = self.parser.parse_args(['saml'])
 

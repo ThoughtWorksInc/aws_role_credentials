@@ -63,6 +63,11 @@ def create_parser(prog, epilog,
         default='us-east-1',
         help='The region to use. Overrides config/env settings.')
 
+    parent_parser.add_argument(
+        '--exec', type=str,
+        dest='exec_command',
+        help='If present then the string is read as a command to execute with the AWS credentials set as environment variables.')
+
     saml_parser = subparsers.add_parser('saml',
                                         description='Assume role using SAML assertion',
                                         parents=[parent_parser])
@@ -93,7 +98,6 @@ def create_parser(prog, epilog,
 
 
     user_parser.set_defaults(func=user_action)
-
 
     return arg_parser
 
