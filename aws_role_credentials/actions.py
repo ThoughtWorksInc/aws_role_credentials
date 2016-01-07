@@ -7,6 +7,7 @@ from subprocess import Popen
 
 from aws_role_credentials.models import SamlAssertion, AwsCredentialsFile
 
+
 class Actions:
 
     def __init__(self,
@@ -25,14 +26,15 @@ class Actions:
         AwsCredentialsFile(credentials_filename).add_profile(profile,
                                                              region,
                                                              token.credentials)
+
     @staticmethod
     def credentials_handler(credentials_filename,
                             profile,
                             region, **kwargs):
         return lambda token: Actions.persist_credentials(credentials_filename,
-                                                    profile,
-                                                    region,
-                                                    token)
+                                                         profile,
+                                                         region,
+                                                         token)
 
     @staticmethod
     def exec_with_credentials(region, command, token):

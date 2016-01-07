@@ -11,12 +11,13 @@ else:
 import example
 import fake_filesystem_unittest
 
-from aws_role_credentials.models import SamlAssertion, AwsCredentialsFile
 from tests.helper import saml_assertion, read_config_file, Struct
 from aws_role_credentials.actions import Actions
 
+
 def load_tests(loader, tests, ignore):
     return fake_filesystem_unittest.load_doctests(loader, tests, ignore, example)
+
 
 class TestActions(unittest.TestCase):
     @mock.patch('aws_role_credentials.actions.boto.sts')
@@ -72,7 +73,6 @@ class TestActions(unittest.TestCase):
                                                  mfa_serial_number='arn:11111',
                                                  mfa_token='123456')
 
-
     @mock.patch('aws_role_credentials.actions.Popen')
     def test_exec_setups_environment_variables(self, mock_popen):
         token = Struct({'credentials':
@@ -87,17 +87,15 @@ class TestActions(unittest.TestCase):
                                           'echo hello', token)
 
             mock_popen.assert_called_with(['echo', 'hello'],
-                                          env={'AWS_ACCESS_KEY_ID':'TEST_ACCESS_KEY',
+                                          env={'AWS_ACCESS_KEY_ID': 'TEST_ACCESS_KEY',
                                                'AWS_DEFAULT_REGION': 'un-south-1',
                                                'AWS_SECRET_ACCESS_KEY': 'TEST_SECRET_KEY',
                                                'AWS_SESSION_TOKEN': 'TEST_TOKEN'},
                                           shell=False)
 
 
-
-
 class TestConfigActions(fake_filesystem_unittest.TestCase):
-    TEST_FILE="/test/file"
+    TEST_FILE = "/test/file"
 
     def setUp(self):
         self.setUpPyfakefs()

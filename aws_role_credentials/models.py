@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 import ConfigParser
 import base64
 
+
 class SamlAssertion:
 
     def __init__(self, assertion):
@@ -19,7 +20,6 @@ class SamlAssertion:
     def sort_roles(roles):
         return sorted(roles,
                       key=lambda role: 'saml-provider' in role)
-
 
     def roles(self):
         attributes = ET.fromstring(self.assertion).getiterator('{urn:oasis:names:tc:SAML:2.0:assertion}Attribute')
@@ -40,7 +40,9 @@ class SamlAssertion:
     def encode(self):
         return base64.b64encode(self.assertion)
 
+
 class AwsCredentialsFile:
+
     def __init__(self, filename):
         self.filename = filename
         return
@@ -53,7 +55,7 @@ class AwsCredentialsFile:
             config.add_section(name)
 
         [(config.set(name, k, v))
-         for k,v in profile.iteritems()]
+         for k, v in profile.iteritems()]
 
         with open(self.filename, 'w+') as configfile:
             config.write(configfile)
