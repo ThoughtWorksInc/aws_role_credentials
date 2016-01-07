@@ -8,6 +8,7 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
+import example
 import fake_filesystem_unittest
 
 from aws_role_credentials.models import SamlAssertion, AwsCredentialsFile
@@ -115,10 +116,12 @@ class TestConfigActions(fake_filesystem_unittest.TestCase):
                                     'test-profile',
                                     'un-south-1', token)
 
-        assert read_config_file(self.TEST_FILE) == ['[test-profile]',
-                                                    'output = json',
-                                                    'region = un-south-1',
-                                                    'aws_access_key_id = SAML_ACCESS_KEY',
-                                                    'aws_secret_access_key = SAML_SECRET_KEY',
-                                                    'aws_session_token = SAML_TOKEN',
-                                                    '']
+        self.assertItemsEqual(read_config_file(self.TEST_FILE),
+                              ['[test-profile]',
+                               'output = json',
+                               'region = un-south-1',
+                               'aws_access_key_id = SAML_ACCESS_KEY',
+                               'aws_secret_access_key = SAML_SECRET_KEY',
+                               'aws_security_token = SAML_TOKEN',
+                               'aws_session_token = SAML_TOKEN',
+                               ''])

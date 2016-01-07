@@ -7,6 +7,7 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
+import example
 import fake_filesystem_unittest
 
 from os.path import expanduser
@@ -48,12 +49,13 @@ class TestAcceptance(fake_filesystem_unittest.TestCase):
                   '--profile', 'test-profile',
                   '--region', 'un-south-1'])
 
-        self.assertEqual(read_config_file(self.TEST_FILE),
+        self.assertItemsEqual(read_config_file(self.TEST_FILE),
                          ['[test-profile]',
                           'output = json',
                           'region = un-south-1',
                           'aws_access_key_id = SAML_ACCESS_KEY',
                           'aws_secret_access_key = SAML_SECRET_KEY',
+                          'aws_security_token = SAML_TOKEN',
                           'aws_session_token = SAML_TOKEN',
                           ''])
 
@@ -73,12 +75,13 @@ class TestAcceptance(fake_filesystem_unittest.TestCase):
                   '--profile', 'test-profile',
                   '--region', 'un-south-1'])
 
-        self.assertEqual(read_config_file(self.TEST_FILE),
+        self.assertItemsEqual(read_config_file(self.TEST_FILE),
                          ['[test-profile]',
                           'output = json',
                           'region = un-south-1',
                           'aws_access_key_id = SAML_ACCESS_KEY',
                           'aws_secret_access_key = SAML_SECRET_KEY',
+                          'aws_security_token = SAML_TOKEN',
                           'aws_session_token = SAML_TOKEN',
                           ''])
 

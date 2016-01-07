@@ -63,4 +63,5 @@ class AwsCredentialsFile:
                                  'region': region,
                                  'aws_access_key_id': credentials.access_key,
                                  'aws_secret_access_key': credentials.secret_key,
+                                 'aws_security_token': credentials.session_token,
                                  'aws_session_token': credentials.session_token})
