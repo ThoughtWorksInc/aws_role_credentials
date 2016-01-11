@@ -5,6 +5,8 @@ AWS Role Credentials
 .. image:: https://img.shields.io/pypi/v/aws_role_credentials.svg
         :target: https://pypi.python.org/pypi/aws_role_credentials
 
+.. image:: https://snap-ci.com/ThoughtWorksInc/aws_role_credentials/branch/master/build_image
+        :target: https://snap-ci.com/ThoughtWorksInc/aws_role_credentials/branch/master
 
 Generates AWS credentials for roles using STS and writes them to ```~/.aws/credentials```
 
