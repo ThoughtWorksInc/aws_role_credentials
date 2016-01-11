@@ -7,6 +7,7 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
+import example
 import fake_filesystem_unittest
 
 from os.path import expanduser
@@ -15,12 +16,14 @@ from tests.helper import saml_assertion, read_config_file, Struct
 from aws_role_credentials import cli
 from StringIO import StringIO
 
+
 def load_tests(loader, tests, ignore):
     return fake_filesystem_unittest.load_doctests(loader, tests, ignore, example)
 
+
 class TestAcceptance(fake_filesystem_unittest.TestCase):
     HOME = expanduser('~/')
-    TEST_FILE=os.path.join(HOME, '.aws/credentials')
+    TEST_FILE = os.path.join(HOME, '.aws/credentials')
 
     def setUp(self):
         self.patcher = mock.patch('aws_role_credentials.cli.configurelogging')
@@ -48,14 +51,15 @@ class TestAcceptance(fake_filesystem_unittest.TestCase):
                   '--profile', 'test-profile',
                   '--region', 'un-south-1'])
 
-        self.assertEqual(read_config_file(self.TEST_FILE),
-                         ['[test-profile]',
-                          'output = json',
-                          'region = un-south-1',
-                          'aws_access_key_id = SAML_ACCESS_KEY',
-                          'aws_secret_access_key = SAML_SECRET_KEY',
-                          'aws_session_token = SAML_TOKEN',
-                          ''])
+        self.assertItemsEqual(read_config_file(self.TEST_FILE),
+                              ['[test-profile]',
+                               'output = json',
+                               'region = un-south-1',
+                               'aws_access_key_id = SAML_ACCESS_KEY',
+                               'aws_secret_access_key = SAML_SECRET_KEY',
+                               'aws_security_token = SAML_TOKEN',
+                               'aws_session_token = SAML_TOKEN',
+                               ''])
 
     @mock.patch('aws_role_credentials.actions.boto.sts')
     def test_credentials_are_generated_from_user(self, mock_sts):
@@ -73,14 +77,15 @@ class TestAcceptance(fake_filesystem_unittest.TestCase):
                   '--profile', 'test-profile',
                   '--region', 'un-south-1'])
 
-        self.assertEqual(read_config_file(self.TEST_FILE),
-                         ['[test-profile]',
-                          'output = json',
-                          'region = un-south-1',
-                          'aws_access_key_id = SAML_ACCESS_KEY',
-                          'aws_secret_access_key = SAML_SECRET_KEY',
-                          'aws_session_token = SAML_TOKEN',
-                          ''])
+        self.assertItemsEqual(read_config_file(self.TEST_FILE),
+                              ['[test-profile]',
+                               'output = json',
+                               'region = un-south-1',
+                               'aws_access_key_id = SAML_ACCESS_KEY',
+                               'aws_secret_access_key = SAML_SECRET_KEY',
+                               'aws_security_token = SAML_TOKEN',
+                               'aws_session_token = SAML_TOKEN',
+                               ''])
 
     @mock.patch('aws_role_credentials.actions.Popen')
     @mock.patch('aws_role_credentials.actions.boto.sts')

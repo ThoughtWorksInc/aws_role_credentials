@@ -14,11 +14,13 @@ from aws_role_credentials.actions import Actions
 
 log = logging.getLogger('aws_role_credentials')
 
+
 def configurelogging():
     log.setLevel(logging.DEBUG)
     stderrlog = logging.StreamHandler()
     stderrlog.setFormatter(logging.Formatter("%(message)s"))
     log.addHandler(stderrlog)
+
 
 def read_stdin():
     try:
@@ -27,18 +29,22 @@ def read_stdin():
         sys.stdout.flush()
         pass
 
+
 def token_action(args):
     if args['exec_command']:
         return Actions.exec_handler(**args)
     return Actions.credentials_handler(**args)
+
 
 def saml_action(args):
     args['assertion'] = read_stdin()
 
     token_action(args)(Actions.saml_token(**args))
 
+
 def user_action(args):
     token_action(args)(Actions.user_token(**args))
+
 
 def create_parser(prog, epilog,
                   saml_action=saml_action,
@@ -95,15 +101,14 @@ def create_parser(prog, epilog,
         '--mfa-serial-number', type=str,
         help='An identifier of the MFA device that is associated with the user.')
 
-
     user_parser.add_argument(
         '--mfa-token', type=str,
         help='The value provided by the MFA device.')
 
-
     user_parser.set_defaults(func=user_action)
 
     return arg_parser
+
 
 def main(argv):
     configurelogging()
@@ -143,6 +148,7 @@ URL: <{url}>
     config.func(vars(config))
 
     return 0
+
 
 def entry_point():
     """Zero-argument entry point for use with setuptools/distribute."""

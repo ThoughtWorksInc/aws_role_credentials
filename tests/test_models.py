@@ -15,11 +15,15 @@ else:
     import unittest
 
 import fake_filesystem_unittest
+import example
+
 from tests.helper import saml_assertion, write_config_file, read_config_file, Struct
 from aws_role_credentials.models import SamlAssertion, AwsCredentialsFile
 
+
 def load_tests(loader, tests, ignore):
     return fake_filesystem_unittest.load_doctests(loader, tests, ignore, example)
+
 
 class TestSamlAssertion(unittest.TestCase):
     def test_roles_are_extracted(self):
@@ -42,7 +46,7 @@ class TestSamlAssertion(unittest.TestCase):
 
     def test_multiple_roles_are_returned(self):
         assertion = saml_assertion(['arn:aws:iam::1111:role/DevRole,arn:aws:iam::1111:saml-provider/IDP',
-                                         'arn:aws:iam::2222:role/QARole,arn:aws:iam::2222:saml-provider/IDP'])
+                                    'arn:aws:iam::2222:role/QARole,arn:aws:iam::2222:saml-provider/IDP'])
 
         assert SamlAssertion(assertion).roles() == [{'role': 'arn:aws:iam::1111:role/DevRole',
                                                      'principle': 'arn:aws:iam::1111:saml-provider/IDP'},
@@ -54,7 +58,7 @@ class TestSamlAssertion(unittest.TestCase):
 
 
 class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
-    TEST_FILE="/test/file"
+    TEST_FILE = "/test/file"
 
     def setUp(self):
         self.setUpPyfakefs()
@@ -69,13 +73,13 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                                         'secret_key': 'SECRET_KEY',
                                         'session_token': 'SESSION_TOKEN'}))
 
-
         self.assertItemsEqual(read_config_file(self.TEST_FILE),
                               ['[dev]',
                                'output = json',
                                'region = un-west-5',
                                'aws_access_key_id = ACCESS_KEY',
                                'aws_secret_access_key = SECRET_KEY',
+                               'aws_security_token = SESSION_TOKEN',
                                'aws_session_token = SESSION_TOKEN',
                                ''])
 
@@ -99,6 +103,7 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                                'aws_access_key_id = ACCESS_KEY',
                                'aws_secret_access_key = SECRET_KEY',
                                'output = json',
+                               'aws_security_token = SESSION_TOKEN',
                                'aws_session_token = SESSION_TOKEN',
                                ''])
 
@@ -109,11 +114,13 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                           'region = us-west-2',
                           'aws_access_key_id = TEST_KEY',
                           'aws_secret_access_key = TEST_ACCESS',
+                          'aws_security_token = TEST_TOKEN',
                           'aws_session_token = TEST_TOKEN')
 
         AwsCredentialsFile(self.TEST_FILE).add_profile(
             'dev', 'un-west-5', Struct({'access_key': 'ACCESS_KEY',
                                         'secret_key': 'SECRET_KEY',
+                                        'security_token': 'SESSION_TOKEN',
                                         'session_token': 'SESSION_TOKEN'}))
 
         self.assertItemsEqual(read_config_file(self.TEST_FILE),
@@ -122,6 +129,7 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                                'aws_access_key_id = TEST_KEY',
                                'aws_secret_access_key = TEST_ACCESS',
                                'output = none',
+                               'aws_security_token = TEST_TOKEN',
                                'aws_session_token = TEST_TOKEN',
                                '',
                                '[dev]',
@@ -129,6 +137,7 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                                'region = un-west-5',
                                'aws_access_key_id = ACCESS_KEY',
                                'aws_secret_access_key = SECRET_KEY',
+                               'aws_security_token = SESSION_TOKEN',
                                'aws_session_token = SESSION_TOKEN',
                                ''])
 

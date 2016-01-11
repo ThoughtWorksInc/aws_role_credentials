@@ -66,6 +66,7 @@ Ready to contribute? Here's how to set up `aws_role_credentials` for local devel
 
     $ mkvirtualenv aws_role_credentials
     $ cd aws_role_credentials/
+    $ pip install -r requirements_dev.txt
     $ python setup.py develop
 
 4. Create a branch for local development::

@@ -7,6 +7,7 @@ from mock import Mock
 
 from aws_role_credentials.cli import create_parser
 
+
 class TestArgParsing(unittest.TestCase):
     def setUp(self):
         self.saml_action = Mock()
@@ -59,7 +60,6 @@ class TestArgParsing(unittest.TestCase):
     def test_user_subcommand_requires_session_name(self):
         with self.assertRaises(SystemExit):
             self.parser.parse_args(['user', 'role-arn'])
-
 
     def test_user_subcommand_with_mfa(self):
         parsed = self.parser.parse_args(['user', 'test-arn', 'test-session',
