@@ -41,7 +41,8 @@ class TestAcceptance(fake_filesystem_unittest.TestCase):
     def test_credentials_are_generated_from_saml(self, mock_sts):
         mock_conn = MagicMock()
         mock_conn.assume_role_with_saml.return_value = Struct({'credentials':
-                                                               Struct({'access_key': 'SAML_ACCESS_KEY',
+                                                               Struct({'expiration': 'SAML_TOKEN_EXPIRATION',
+                                                                       'access_key': 'SAML_ACCESS_KEY',
                                                                        'secret_key': 'SAML_SECRET_KEY',
                                                                        'session_token': 'SAML_TOKEN'})})
         mock_sts.connect_to_region.return_value = mock_conn
@@ -65,7 +66,8 @@ class TestAcceptance(fake_filesystem_unittest.TestCase):
     def test_credentials_are_generated_from_user(self, mock_sts):
         mock_conn = MagicMock()
         mock_conn.assume_role.return_value = Struct({'credentials':
-                                                     Struct({'access_key': 'SAML_ACCESS_KEY',
+                                                     Struct({'expiration': 'SAML_TOKEN_EXPIRATION',
+                                                             'access_key': 'SAML_ACCESS_KEY',
                                                              'secret_key': 'SAML_SECRET_KEY',
                                                              'session_token': 'SAML_TOKEN'})})
         mock_sts.connect_to_region.return_value = mock_conn
@@ -92,7 +94,8 @@ class TestAcceptance(fake_filesystem_unittest.TestCase):
     def test_credentials_exec_command(self, mock_sts, mock_popen):
         mock_conn = MagicMock()
         mock_conn.assume_role.return_value = Struct({'credentials':
-                                                     Struct({'access_key': 'SAML_ACCESS_KEY',
+                                                     Struct({'expiration': 'SAML_TOKEN_EXPIRATION',
+                                                             'access_key': 'SAML_ACCESS_KEY',
                                                              'secret_key': 'SAML_SECRET_KEY',
                                                              'session_token': 'SAML_TOKEN'})})
 

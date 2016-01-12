@@ -60,10 +60,19 @@ class AwsCredentialsFile:
         with open(self.filename, 'w+') as configfile:
             config.write(configfile)
 
-    def add_profile(self, name, region, credentials):
+    def add_profile(self, name, region, credentials, quiet):
         self._add_profile(name, {'output': 'json',
                                  'region': region,
                                  'aws_access_key_id': credentials.access_key,
                                  'aws_secret_access_key': credentials.secret_key,
                                  'aws_security_token': credentials.session_token,
                                  'aws_session_token': credentials.session_token})
+
+        # Tell user token expiration and basic profile usage
+        if not quiet:
+            print '\n\n----------------------------------------------------------------'
+            print 'Your credentials have been stored in the AWS configuration file {0} under the {1} profile.'.format(self.filename, name)
+            print 'Note that they will expire at {0}.'.format(credentials.expiration)
+            print 'You may safely rerun this script at any time to refresh your credentials.'
+            print 'To use this credential, call the AWS CLI with the --profile option (e.g. aws --profile {0} ec2 describe-instances).'.format(name)
+            print '----------------------------------------------------------------\n\n'
