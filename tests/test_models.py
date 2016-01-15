@@ -14,15 +14,10 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
-import fake_filesystem_unittest
-import example
+from pyfakefs import fake_filesystem_unittest
 
 from tests.helper import saml_assertion, write_config_file, read_config_file, Struct
 from aws_role_credentials.models import SamlAssertion, AwsCredentialsFile
-
-
-def load_tests(loader, tests, ignore):
-    return fake_filesystem_unittest.load_doctests(loader, tests, ignore, example)
 
 
 class TestSamlAssertion(unittest.TestCase):

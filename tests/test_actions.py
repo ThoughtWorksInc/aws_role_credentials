@@ -8,16 +8,10 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
-import example
-import fake_filesystem_unittest
+from pyfakefs import fake_filesystem_unittest
 
 from tests.helper import saml_assertion, read_config_file, Struct
 from aws_role_credentials.actions import Actions
-
-
-def load_tests(loader, tests, ignore):
-    return fake_filesystem_unittest.load_doctests(loader, tests, ignore, example)
-
 
 class TestActions(unittest.TestCase):
     @mock.patch('aws_role_credentials.actions.boto.sts')
