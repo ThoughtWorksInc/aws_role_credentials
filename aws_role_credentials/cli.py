@@ -78,6 +78,11 @@ def create_parser(prog, epilog,
         dest='exec_command',
         help='If present then the string is read as a command to execute with the AWS credentials set as environment variables.')
 
+    parent_parser.add_argument(
+        '-q', '--quiet',
+        action='store_true',
+        help='Do not print helpful info including token expiration on successful authentication.')
+
     saml_parser = subparsers.add_parser('saml',
                                         description='Assume role using SAML assertion',
                                         parents=[parent_parser])

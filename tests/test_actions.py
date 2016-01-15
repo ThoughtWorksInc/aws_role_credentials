@@ -72,7 +72,8 @@ class TestActions(unittest.TestCase):
         token = Struct({'credentials':
                         Struct({'access_key': 'TEST_ACCESS_KEY',
                                 'secret_key': 'TEST_SECRET_KEY',
-                                'session_token': 'TEST_TOKEN'})})
+                                'session_token': 'TEST_TOKEN',
+                                'expiration': 'TEST_EXPIRATION'})})
 
         with mock.patch('os.environ') as mock_env:
             mock_env.copy.return_value = {}
@@ -102,11 +103,12 @@ class TestConfigActions(fake_filesystem_unittest.TestCase):
         token = Struct({'credentials':
                         Struct({'access_key': 'SAML_ACCESS_KEY',
                                 'secret_key': 'SAML_SECRET_KEY',
-                                'session_token': 'SAML_TOKEN'})})
+                                'session_token': 'SAML_TOKEN',
+                                'expiration': 'TEST_EXPIRATION'})})
 
         Actions.persist_credentials(self.TEST_FILE,
                                     'test-profile',
-                                    'un-south-1', token)
+                                    'un-south-1', token, True)
 
         self.assertItemsEqual(read_config_file(self.TEST_FILE),
                               ['[test-profile]',

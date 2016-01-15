@@ -14,27 +14,32 @@ class Actions:
                  credentials_filename,
                  profile,
                  region,
+                 quiet,
                  **kwargs):
 
         self.credentials_filename = credentials_filename
         self.profile = profile
         self.region = region
+        self.quiet = quiet
 
     @staticmethod
     def persist_credentials(credentials_filename,
-                            profile, region, token):
+                            profile, region, token, quiet, **kwargs):
         AwsCredentialsFile(credentials_filename).add_profile(profile,
                                                              region,
-                                                             token.credentials)
+                                                             token.credentials,
+                                                             quiet)
 
     @staticmethod
     def credentials_handler(credentials_filename,
                             profile,
-                            region, **kwargs):
+                            region, quiet, **kwargs):
+
         return lambda token: Actions.persist_credentials(credentials_filename,
                                                          profile,
                                                          region,
-                                                         token)
+                                                         token,
+                                                         quiet)
 
     @staticmethod
     def exec_with_credentials(region, command, token):
