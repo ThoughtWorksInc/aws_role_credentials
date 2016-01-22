@@ -13,6 +13,7 @@ from pyfakefs import fake_filesystem_unittest
 from tests.helper import saml_assertion, read_config_file, Struct
 from aws_role_credentials.actions import Actions
 
+
 class TestActions(unittest.TestCase):
     @mock.patch('aws_role_credentials.actions.boto.sts')
     def test_credentials_are_generated_from_saml(self, mock_sts):
