@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import xml.etree.ElementTree as ET
-import ConfigParser
 import base64
+
+try:
+    import configparser
+except ImportError:
+    import ConfigParser  # ver. < 3.0
 
 
 class SamlAssertion:
@@ -48,8 +52,12 @@ class AwsCredentialsFile:
         return
 
     def _add_profile(self, name, profile):
-        config = ConfigParser.RawConfigParser()
-        config.read(self.filename)
+
+        config = configparser.ConfigParser(interpolation=None)
+        try:
+            config.read_file(open(self.filename, 'r'))
+        except:
+            pass
 
         if not config.has_section(name):
             config.add_section(name)

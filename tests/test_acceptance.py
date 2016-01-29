@@ -15,6 +15,7 @@ from tests.helper import saml_assertion, read_config_file, Struct
 from aws_role_credentials import cli
 from StringIO import StringIO
 
+
 class TestAcceptance(fake_filesystem_unittest.TestCase):
     HOME = expanduser('~/')
     TEST_FILE = os.path.join(HOME, '.aws/credentials')
