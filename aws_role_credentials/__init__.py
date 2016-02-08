@@ -2,4 +2,4 @@
 
 __author__ = 'Peter Gillard-Moss'
 __email__ = 'pgillard@thoughtworks.com'
-__version__ = '0.6.0'
+__version__ = '0.6.1'
