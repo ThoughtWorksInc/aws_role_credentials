@@ -67,7 +67,7 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
             'dev', 'un-west-5', Struct({'access_key': 'ACCESS_KEY',
                                         'secret_key': 'SECRET_KEY',
                                         'session_token': 'SESSION_TOKEN',
-                                        'expiration': 'TEST_EXPIRATION'}), True)
+                                        'expiration': 'TEST_EXPIRATION'}))
 
         self.assertItemsEqual(read_config_file(self.TEST_FILE),
                               ['[dev]',
@@ -92,7 +92,7 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
             'dev', 'un-west-5', Struct({'access_key': 'ACCESS_KEY',
                                         'secret_key': 'SECRET_KEY',
                                         'session_token': 'SESSION_TOKEN',
-                                        'expiration': 'TEST_EXPIRATION'}), True)
+                                        'expiration': 'TEST_EXPIRATION'}))
 
         self.assertItemsEqual(read_config_file(self.TEST_FILE),
                               ['[dev]',
@@ -119,7 +119,7 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                                         'secret_key': 'SECRET_KEY',
                                         'security_token': 'SESSION_TOKEN',
                                         'session_token': 'SESSION_TOKEN',
-                                        'expiration': 'TEST_EXPIRATION'}), True)
+                                        'expiration': 'TEST_EXPIRATION'}))
 
         self.assertItemsEqual(read_config_file(self.TEST_FILE),
                               ['[test]',
