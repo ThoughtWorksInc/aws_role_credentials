@@ -23,7 +23,8 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read().replace('.. :changelog:', '')
 
 requirements = [
-    'boto'
+    'boto',
+    'configparser'
 ]
 
 # as of Python >= 2.7 and >= 3.2, the argparse module is maintained within
