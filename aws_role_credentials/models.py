@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import configparser
 import xml.etree.ElementTree as ET
-
-from six.moves import configparser
 
 
 class SamlAssertion:

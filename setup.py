@@ -27,6 +27,9 @@ requirements = [
     'six',
 ]
 
+if sys.version_info < (3, 0):
+    requirements.append('configparser')
+
 # as of Python >= 2.7 and >= 3.2, the argparse module is maintained within
 # the Python standard library, otherwise we install it as a separate package
 if sys.version_info < (2, 7) or (3, 0) <= sys.version_info < (3, 3):
