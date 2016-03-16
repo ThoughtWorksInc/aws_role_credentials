@@ -9,6 +9,7 @@ else:
     import unittest
 
 from pyfakefs import fake_filesystem_unittest
+import six
 
 from tests.helper import saml_assertion, read_config_file, Struct
 from aws_role_credentials.actions import Actions
@@ -111,12 +112,12 @@ class TestConfigActions(fake_filesystem_unittest.TestCase):
                                     'test-profile',
                                     'un-south-1', token, True)
 
-        self.assertItemsEqual(read_config_file(self.TEST_FILE),
-                              ['[test-profile]',
-                               'output = json',
-                               'region = un-south-1',
-                               'aws_access_key_id = SAML_ACCESS_KEY',
-                               'aws_secret_access_key = SAML_SECRET_KEY',
-                               'aws_security_token = SAML_TOKEN',
-                               'aws_session_token = SAML_TOKEN',
-                               ''])
+        six.assertCountEqual(self, read_config_file(self.TEST_FILE),
+                             ['[test-profile]',
+                              'output = json',
+                              'region = un-south-1',
+                              'aws_access_key_id = SAML_ACCESS_KEY',
+                              'aws_secret_access_key = SAML_SECRET_KEY',
+                              'aws_security_token = SAML_TOKEN',
+                              'aws_session_token = SAML_TOKEN',
+                              ''])

@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import xml.etree.ElementTree as ET
 import base64
+import xml.etree.ElementTree as ET
 
-try:
-    import configparser
-except ImportError:
-    import ConfigParser  # ver. < 3.0
+from six.moves import configparser
 
 
 class SamlAssertion:
@@ -42,7 +39,7 @@ class SamlAssertion:
                 in roles_values[0]]
 
     def encode(self):
-        return base64.b64encode(self.assertion)
+        return base64.b64encode(self.assertion.encode('utf8'))
 
 
 class AwsCredentialsFile:
@@ -63,7 +60,7 @@ class AwsCredentialsFile:
             config.add_section(name)
 
         [(config.set(name, k, v))
-         for k, v in profile.iteritems()]
+         for k, v in profile.items()]
 
         with open(self.filename, 'w+') as configfile:
             config.write(configfile)
