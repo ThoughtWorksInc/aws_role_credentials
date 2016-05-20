@@ -8,12 +8,13 @@ else:
     import unittest
 
 from pyfakefs import fake_filesystem_unittest
+import six
 
 from os.path import expanduser
 from mock import MagicMock
 from tests.helper import saml_assertion, read_config_file, Struct
 from aws_role_credentials import cli
-from StringIO import StringIO
+from six.moves import StringIO
 
 
 class TestAcceptance(fake_filesystem_unittest.TestCase):
@@ -47,15 +48,16 @@ class TestAcceptance(fake_filesystem_unittest.TestCase):
                   '--profile', 'test-profile',
                   '--region', 'un-south-1'])
 
-        self.assertItemsEqual(read_config_file(self.TEST_FILE),
-                              ['[test-profile]',
-                               'output = json',
-                               'region = un-south-1',
-                               'aws_access_key_id = SAML_ACCESS_KEY',
-                               'aws_secret_access_key = SAML_SECRET_KEY',
-                               'aws_security_token = SAML_TOKEN',
-                               'aws_session_token = SAML_TOKEN',
-                               ''])
+        six.assertCountEqual(self,
+                             read_config_file(self.TEST_FILE),
+                             ['[test-profile]',
+                              'output = json',
+                              'region = un-south-1',
+                              'aws_access_key_id = SAML_ACCESS_KEY',
+                              'aws_secret_access_key = SAML_SECRET_KEY',
+                              'aws_security_token = SAML_TOKEN',
+                              'aws_session_token = SAML_TOKEN',
+                              ''])
 
     @mock.patch('aws_role_credentials.actions.boto.sts')
     def test_credentials_are_generated_from_user(self, mock_sts):
@@ -74,15 +76,15 @@ class TestAcceptance(fake_filesystem_unittest.TestCase):
                   '--profile', 'test-profile',
                   '--region', 'un-south-1'])
 
-        self.assertItemsEqual(read_config_file(self.TEST_FILE),
-                              ['[test-profile]',
-                               'output = json',
-                               'region = un-south-1',
-                               'aws_access_key_id = SAML_ACCESS_KEY',
-                               'aws_secret_access_key = SAML_SECRET_KEY',
-                               'aws_security_token = SAML_TOKEN',
-                               'aws_session_token = SAML_TOKEN',
-                               ''])
+        six.assertCountEqual(self, read_config_file(self.TEST_FILE),
+                             ['[test-profile]',
+                              'output = json',
+                              'region = un-south-1',
+                              'aws_access_key_id = SAML_ACCESS_KEY',
+                              'aws_secret_access_key = SAML_SECRET_KEY',
+                              'aws_security_token = SAML_TOKEN',
+                              'aws_session_token = SAML_TOKEN',
+                              ''])
 
     @mock.patch('aws_role_credentials.actions.Popen')
     @mock.patch('aws_role_credentials.actions.boto.sts')

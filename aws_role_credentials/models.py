@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import xml.etree.ElementTree as ET
 import base64
-
-try:
-    import configparser
-except ImportError:
-    import ConfigParser  # ver. < 3.0
+import configparser
+import xml.etree.ElementTree as ET
 
 
 class SamlAssertion:
@@ -42,7 +38,7 @@ class SamlAssertion:
                 in roles_values[0]]
 
     def encode(self):
-        return base64.b64encode(self.assertion)
+        return base64.b64encode(self.assertion.encode('utf8'))
 
 
 class AwsCredentialsFile:
@@ -63,15 +59,16 @@ class AwsCredentialsFile:
             config.add_section(name)
 
         [(config.set(name, k, v))
-         for k, v in profile.iteritems()]
+         for k, v in profile.items()]
 
         with open(self.filename, 'w+') as configfile:
             config.write(configfile)
 
     def add_profile(self, name, region, credentials):
-        self._add_profile(name, {'output': 'json',
-                                 'region': region,
-                                 'aws_access_key_id': credentials.access_key,
-                                 'aws_secret_access_key': credentials.secret_key,
-                                 'aws_security_token': credentials.session_token,
-                                 'aws_session_token': credentials.session_token})
+        name = unicode(name)
+        self._add_profile(name, {u'output': u'json',
+                                 u'region': unicode(region),
+                                 u'aws_access_key_id': unicode(credentials.access_key),
+                                 u'aws_secret_access_key': unicode(credentials.secret_key),
+                                 u'aws_security_token': unicode(credentials.session_token),
+                                 u'aws_session_token': unicode(credentials.session_token)})

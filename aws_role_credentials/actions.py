@@ -24,12 +24,12 @@ class Actions:
 
     @staticmethod
     def print_credentials(credentials_filename, profile, credentials):
-        print '\n\n----------------------------------------------------------------'
-        print 'Your credentials have been stored in the AWS configuration file {0} under the {1} profile.'.format(credentials_filename, profile)
-        print 'Note that they will expire at {0}.'.format(credentials.expiration)
-        print 'You may safely rerun this script at any time to refresh your credentials.'
-        print 'To use this credential, call the AWS CLI with the --profile option (e.g. aws --profile {0} ec2 describe-instances).'.format(profile)
-        print '----------------------------------------------------------------\n\n'
+        print('\n\n----------------------------------------------------------------')
+        print('Your credentials have been stored in the AWS configuration file {0} under the {1} profile.'.format(credentials_filename, profile))
+        print('Note that they will expire at {0}.'.format(credentials.expiration))
+        print('You may safely rerun this script at any time to refresh your credentials.')
+        print('To use this credential, call the AWS CLI with the --profile option (e.g. aws --profile {0} ec2 describe-instances).'.format(profile))
+        print('----------------------------------------------------------------\n\n')
 
     @staticmethod
     def persist_credentials(credentials_filename,

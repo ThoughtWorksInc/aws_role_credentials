@@ -15,6 +15,7 @@ else:
     import unittest
 
 from pyfakefs import fake_filesystem_unittest
+import six
 
 from tests.helper import saml_assertion, write_config_file, read_config_file, Struct
 from aws_role_credentials.models import SamlAssertion, AwsCredentialsFile
@@ -49,7 +50,7 @@ class TestSamlAssertion(unittest.TestCase):
                                                      'principle': 'arn:aws:iam::2222:saml-provider/IDP'}]
 
     def test_assertion_is_encoded(self):
-        assert SamlAssertion("test encoding").encode() == 'dGVzdCBlbmNvZGluZw=='
+        assert SamlAssertion("test encoding").encode() == b'dGVzdCBlbmNvZGluZw=='
 
 
 class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
@@ -69,15 +70,15 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                                         'session_token': 'SESSION_TOKEN',
                                         'expiration': 'TEST_EXPIRATION'}))
 
-        self.assertItemsEqual(read_config_file(self.TEST_FILE),
-                              ['[dev]',
-                               'output = json',
-                               'region = un-west-5',
-                               'aws_access_key_id = ACCESS_KEY',
-                               'aws_secret_access_key = SECRET_KEY',
-                               'aws_security_token = SESSION_TOKEN',
-                               'aws_session_token = SESSION_TOKEN',
-                               ''])
+        six.assertCountEqual(self, read_config_file(self.TEST_FILE),
+                             ['[dev]',
+                              'output = json',
+                              'region = un-west-5',
+                              'aws_access_key_id = ACCESS_KEY',
+                              'aws_secret_access_key = SECRET_KEY',
+                              'aws_security_token = SESSION_TOKEN',
+                              'aws_session_token = SESSION_TOKEN',
+                              ''])
 
     def test_profile_is_updated(self):
         write_config_file(self.TEST_FILE,
@@ -94,15 +95,15 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                                         'session_token': 'SESSION_TOKEN',
                                         'expiration': 'TEST_EXPIRATION'}))
 
-        self.assertItemsEqual(read_config_file(self.TEST_FILE),
-                              ['[dev]',
-                               'region = un-west-5',
-                               'aws_access_key_id = ACCESS_KEY',
-                               'aws_secret_access_key = SECRET_KEY',
-                               'output = json',
-                               'aws_security_token = SESSION_TOKEN',
-                               'aws_session_token = SESSION_TOKEN',
-                               ''])
+        six.assertCountEqual(self, read_config_file(self.TEST_FILE),
+                             ['[dev]',
+                              'region = un-west-5',
+                              'aws_access_key_id = ACCESS_KEY',
+                              'aws_secret_access_key = SECRET_KEY',
+                              'output = json',
+                              'aws_security_token = SESSION_TOKEN',
+                              'aws_session_token = SESSION_TOKEN',
+                              ''])
 
     def test_existing_profiles_are_preserved(self):
         write_config_file(self.TEST_FILE,
@@ -121,23 +122,23 @@ class TestAwsCredentialsFile(fake_filesystem_unittest.TestCase):
                                         'session_token': 'SESSION_TOKEN',
                                         'expiration': 'TEST_EXPIRATION'}))
 
-        self.assertItemsEqual(read_config_file(self.TEST_FILE),
-                              ['[test]',
-                               'region = us-west-2',
-                               'aws_access_key_id = TEST_KEY',
-                               'aws_secret_access_key = TEST_ACCESS',
-                               'output = none',
-                               'aws_security_token = TEST_TOKEN',
-                               'aws_session_token = TEST_TOKEN',
-                               '',
-                               '[dev]',
-                               'output = json',
-                               'region = un-west-5',
-                               'aws_access_key_id = ACCESS_KEY',
-                               'aws_secret_access_key = SECRET_KEY',
-                               'aws_security_token = SESSION_TOKEN',
-                               'aws_session_token = SESSION_TOKEN',
-                               ''])
+        six.assertCountEqual(self, read_config_file(self.TEST_FILE),
+                             ['[test]',
+                              'region = us-west-2',
+                              'aws_access_key_id = TEST_KEY',
+                              'aws_secret_access_key = TEST_ACCESS',
+                              'output = none',
+                              'aws_security_token = TEST_TOKEN',
+                              'aws_session_token = TEST_TOKEN',
+                              '',
+                              '[dev]',
+                              'output = json',
+                              'region = un-west-5',
+                              'aws_access_key_id = ACCESS_KEY',
+                              'aws_secret_access_key = SECRET_KEY',
+                              'aws_security_token = SESSION_TOKEN',
+                              'aws_session_token = SESSION_TOKEN',
+                              ''])
 
 
 if __name__ == '__main__':

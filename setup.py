@@ -24,8 +24,11 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'boto',
-    'configparser'
+    'six',
 ]
+
+if sys.version_info < (3, 0):
+    requirements.append('configparser')
 
 # as of Python >= 2.7 and >= 3.2, the argparse module is maintained within
 # the Python standard library, otherwise we install it as a separate package
@@ -34,6 +37,8 @@ if sys.version_info < (2, 7) or (3, 0) <= sys.version_info < (3, 3):
 
 
 test_requirements = [
+    'mock',
+    'pyfakefs',
     'unittest2'
 ]
 
@@ -60,7 +65,7 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: ISC License (ISCL)',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
