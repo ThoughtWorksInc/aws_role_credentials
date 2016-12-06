@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import os
 import boto.sts
+import os
 import shlex
+from getpass import getpass
 from subprocess import Popen
 
 from aws_role_credentials.models import SamlAssertion, AwsCredentialsFile
@@ -73,7 +74,22 @@ class Actions:
     @staticmethod
     def saml_token(region, assertion, **kwargs):
         assertion = SamlAssertion(assertion)
-        role = assertion.roles()[0]
+        roles = assertion.roles()
+        if len(roles) > 1:
+            print('Please select the role you would like to assume:')
+            for i, role in enumerate(roles):
+                print('[{}] - {}'.format(i, role['role']))
+            while True:
+                # We use getpass() instead of input() here because we are already listening for stdin as part of
+                # read_stdin()
+                selectedroleindex = getpass('Selection: ')
+                try:
+                    role = roles[int(selectedroleindex)]
+                    break
+                except (IndexError, ValueError):
+                    print('Invalid selection, please try again...')
+        else:
+            role = roles[0]
 
         conn = boto.sts.connect_to_region(region, anon=True)
         return conn.assume_role_with_saml(role['role'], role['principle'],
