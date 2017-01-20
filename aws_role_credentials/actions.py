@@ -75,7 +75,12 @@ class Actions:
     def saml_token(region, assertion, **kwargs):
         assertion = SamlAssertion(assertion)
         roles = assertion.roles()
-        if len(roles) > 1:
+        if kwargs.get('role_arn', False):
+            for i, role in enumerate(roles):
+                if role['role'] == kwargs['role_arn']:
+                    role = roles[i]
+                    break
+        elif len(roles) > 1:
             print('Please select the role you would like to assume:')
             for i, role in enumerate(roles):
                 print('[{}] - {}'.format(i, role['role']))
