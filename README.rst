@@ -20,6 +20,12 @@ Simply pipe a SAML assertion into awssaml
     # create credentials from saml assertion
     $ oktaauth -u jobloggs | aws_role_credentials saml --profile dev
 
+Or for assuming a known role name:
+
+.. code-block:: shell
+
+    # create credentials from saml assertion using a known role ARN
+    $ oktaauth -u jobloggs | aws_role_credentials saml --profile dev --role-arn arn:aws:iam::098765432109:role/ReadOnly
 
 Or for assuming a role using an IAM user:
 
@@ -64,7 +70,10 @@ Options
 
     --profile          Use a specific profile in your credential file (e.g. Development).  Defaults to sts.
     --region           The region to use. Overrides config/env settings.  Defaults to us-east-1.
+    --role-arn         Optional `role ARN`_ to use when multiple roles are available.
     --exec             The command to execute with the AWS credentials
+
+.. _role ARN: http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html
 
 Thanks
 ======

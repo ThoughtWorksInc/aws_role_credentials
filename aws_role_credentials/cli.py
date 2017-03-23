@@ -74,6 +74,10 @@ def create_parser(prog, epilog,
         help='The region to use. Overrides config/env settings.')
 
     parent_parser.add_argument(
+        '--role-arn', type=str,
+        help='Optional role ARN to use when multiple roles are available.')
+
+    parent_parser.add_argument(
         '--exec', type=str,
         dest='exec_command',
         help='If present then the string is read as a command to execute with the AWS credentials set as environment variables.')
