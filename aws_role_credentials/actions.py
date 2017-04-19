@@ -75,11 +75,13 @@ class Actions:
     def saml_token(region, assertion, **kwargs):
         assertion = SamlAssertion(assertion)
         roles = assertion.roles()
-        if kwargs.get('role_arn', False):
-            for i, role in enumerate(roles):
-                if role['role'] == kwargs['role_arn']:
-                    role = roles[i]
-                    break
+
+        # If the user provided --role-arn attempt to find that role
+        if kwargs.get('role_arn'):
+            role = next((role for role in roles if role['role'] == kwargs['role_arn']), None)
+            if role is None:
+                raise LookupError("Unable to find '--role-arn {}'".format(kwargs['role_arn']))
+        # If user hasn't provided --role-arn and if the list of roles is > 1, prompt the user to select a role
         elif len(roles) > 1:
             print('Please select the role you would like to assume:')
             for i, role in enumerate(roles):
@@ -93,6 +95,7 @@ class Actions:
                     break
                 except (IndexError, ValueError):
                     print('Invalid selection, please try again...')
+        # Default to the first role in the list of roles
         else:
             role = roles[0]
 
