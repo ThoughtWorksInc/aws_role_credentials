@@ -65,6 +65,22 @@ class AwsCredentialsFile:
             config.write(configfile)
 
     def add_profile(self, name, region, credentials):
+        py_version = int(str(range(3))[-2])
+        if py_version == 2:
+            add_profilePy2(name, region, credentials)
+        else:
+            add_profilePy3(name, region, credentials)
+
+    def add_profilePy2(self, name, region, credentials):
+        name = unicode(name)
+        self._add_profile(name, {u'output': u'json',
+                                 u'region': unicode(region),
+                                 u'aws_access_key_id': unicode(credentials.access_key),
+                                 u'aws_secret_access_key': unicode(credentials.secret_key),
+                                 u'aws_security_token': unicode(credentials.session_token),
+                                 u'aws_session_token': unicode(credentials.session_token)})
+
+    def add_profilePy3(self, name, region, credentials):
         self._add_profile(name, {u'output': u'json',
                                  u'region': region,
                                  u'aws_access_key_id': credentials.access_key,
