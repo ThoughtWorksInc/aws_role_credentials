@@ -1,5 +1,5 @@
 ===============================
-AWS Role Credentials
+AWS Role Credentials - Python 3
 ===============================
 
 .. image:: https://img.shields.io/pypi/v/aws_role_credentials.svg
@@ -9,6 +9,11 @@ AWS Role Credentials
         :target: https://snap-ci.com/ThoughtWorksInc/aws_role_credentials/branch/master
 
 Generates AWS credentials for roles using STS and writes them to ```~/.aws/credentials```
+
+Installation
+============
+
+`python3 setup.py install`
 
 Usage
 =====
@@ -85,3 +90,4 @@ Authors
 =======
 
 * Peter Gillard-Moss
+* Matthias Scholz
