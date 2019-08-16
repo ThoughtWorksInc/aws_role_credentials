@@ -1,9 +1,18 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import base64
 import configparser
 import xml.etree.ElementTree as ET
 
+# Support Python 2 and 3
+py_version = sys.version_info.major
+if py_version == 2:
+    def toUnicode( string ):
+        return unicode(string)
+else:
+    def toUnicode( string ):
+        return string
 
 class SamlAssertion:
 
@@ -65,25 +74,10 @@ class AwsCredentialsFile:
             config.write(configfile)
 
     def add_profile(self, name, region, credentials):
-        py_version = int(str(range(3))[-2])
-        if py_version == 2:
-            add_profilePy2(name, region, credentials)
-        else:
-            add_profilePy3(name, region, credentials)
-
-    def add_profilePy2(self, name, region, credentials):
-        name = unicode(name)
+        name = toUnicode(name)
         self._add_profile(name, {u'output': u'json',
-                                 u'region': unicode(region),
-                                 u'aws_access_key_id': unicode(credentials.access_key),
-                                 u'aws_secret_access_key': unicode(credentials.secret_key),
-                                 u'aws_security_token': unicode(credentials.session_token),
-                                 u'aws_session_token': unicode(credentials.session_token)})
-
-    def add_profilePy3(self, name, region, credentials):
-        self._add_profile(name, {u'output': u'json',
-                                 u'region': region,
-                                 u'aws_access_key_id': credentials.access_key,
-                                 u'aws_secret_access_key': credentials.secret_key,
-                                 u'aws_security_token': credentials.session_token,
-                                 u'aws_session_token': credentials.session_token})
+                                 u'region': toUnicode(region),
+                                 u'aws_access_key_id': toUnicode(credentials.access_key),
+                                 u'aws_secret_access_key': toUnicode(credentials.secret_key),
+                                 u'aws_security_token': toUnicode(credentials.session_token),
+                                 u'aws_session_token': toUnicode(credentials.session_token)})
