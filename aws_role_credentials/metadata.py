@@ -8,7 +8,7 @@ Information describing the project.
 package = 'aws_role_credentials'
 project = "AWS role credentials"
 project_no_spaces = project.replace(' ', '')
-version = '0.6.3'
+version = '0.6.4'
 description = "Generates AWS credentials for roles using STS"
 authors = ['Peter Gillard-Moss']
 authors_string = ', '.join(authors)
