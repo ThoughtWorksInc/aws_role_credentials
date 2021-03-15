@@ -22,13 +22,13 @@ class SamlAssertion:
                       key=lambda role: 'saml-provider' in role)
 
     def roles(self):
-        attributes = ET.fromstring(self.assertion).getiterator('{urn:oasis:names:tc:SAML:2.0:assertion}Attribute')
+        attributes = ET.fromstring(self.assertion).iter('{urn:oasis:names:tc:SAML:2.0:assertion}Attribute')
 
         roles_attributes = [x for x
                             in attributes
                             if x.get('Name') == 'https://aws.amazon.com/SAML/Attributes/Role']
 
-        roles_values = [(x.getiterator('{urn:oasis:names:tc:SAML:2.0:assertion}AttributeValue'))
+        roles_values = [(x.iter('{urn:oasis:names:tc:SAML:2.0:assertion}AttributeValue'))
                         for x
                         in roles_attributes]
 
